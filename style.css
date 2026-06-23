@@ -18,6 +18,10 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0a0f2e; }
 ::-webkit-scrollbar-thumb { background: #4f8ef7; border-radius: 3px; }
+@media (max-width: 768px) {
+  ::-webkit-scrollbar { display: none; }
+  html { -ms-overflow-style: none; scrollbar-width: none; }
+}
 
 .highlight { color: #4f8ef7; }
 
