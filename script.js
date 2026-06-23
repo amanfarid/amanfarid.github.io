@@ -299,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===== SKILL RING ANIMATE — rule #9: unobserve after trigger =====
+  // rule #7: skip on mobile — SVG stroke transitions cause GPU glitches
+  if (window.innerWidth > 768) {
   const ringObs = new IntersectionObserver((entries, obs) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -314,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.3 });
   document.querySelectorAll('.skill-card').forEach(card => ringObs.observe(card));
+  }
 
   // ===== ISSUE 1: CERT IMAGE ONERROR FALLBACK =====
   document.querySelectorAll('.cert-badge img').forEach(img => {
