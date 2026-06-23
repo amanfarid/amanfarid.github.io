@@ -1,0 +1,2 @@
+cd "E:\aman work\portfolio project"
+py -m http.server 8080
