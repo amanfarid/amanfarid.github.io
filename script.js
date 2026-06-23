@@ -2,6 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // rule #7: remove bg-canvas from DOM on mobile entirely
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    document.getElementById('bg-canvas')?.remove();
+  }
+
   // ===== PRELOADER =====
   const preloader = document.querySelector('.preloader');
   const loaderProgress = document.querySelector('.loader-progress');
@@ -315,6 +320,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.3 });
   document.querySelectorAll('.skill-card').forEach(card => ringObs.observe(card));
+
+  // ===== ISSUE 1: CERT IMAGE ONERROR FALLBACK =====
+  document.querySelectorAll('.cert-badge img').forEach(img => {
+    if (img.complete && img.naturalWidth > 0) return;
+    img.addEventListener('error', function handler() {
+      const card = this.closest('.cert-card');
+      const name = card?.querySelector('h3')?.textContent || 'Certificate';
+      const fallback = document.createElement('div');
+      fallback.className = 'cert-fallback';
+      fallback.textContent = name.charAt(0);
+      this.replaceWith(fallback);
+    });
+  });
 
   // ===== CERT LIGHTBOX =====
   const lightbox = document.getElementById('cert-lightbox');
@@ -641,6 +659,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.2 });
   document.querySelectorAll('.section-header').forEach(h => headerObs.observe(h));
+
+  // ===== FORM SUBMISSION VIA FORMPREE =====
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = this.querySelector('.submit-btn');
+      const orig = btn.innerHTML;
+      btn.innerHTML = 'Sending...';
+      btn.disabled = true;
+      try {
+        const res = await fetch(this.action, {
+          method: 'POST',
+          body: new FormData(this),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          btn.innerHTML = 'Sent!';
+          btn.classList.add('success');
+          this.reset();
+        } else {
+          throw new Error('Server error');
+        }
+      } catch {
+        btn.innerHTML = 'Failed';
+        btn.classList.add('error');
+        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('error'); btn.disabled = false; }, 3000);
+        return;
+      }
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('success'); btn.disabled = false; }, 3000);
+    });
+  }
 
   // ===== WINDOW RESIZE (non-throttled, fine since it's resize not scroll) =====
   window.addEventListener('resize', () => {
