@@ -21,9 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loaderProgress) loaderProgress.style.width = '100%';
     setTimeout(() => {
       preloader.classList.add('hidden');
+      document.body.style.overflow = '';
       document.getElementById('hero-title')?.classList.add('loaded');
-      // delay overflow removal until preloader fade completes
-      setTimeout(() => { document.body.style.overflow = ''; }, 700);
     }, 600);
   });
   setTimeout(() => {
