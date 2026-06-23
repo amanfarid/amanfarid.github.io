@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aman Farid | AI & Python Developer</title>
+  <meta name="description" content="Aman Farid - BSAI student at Mehran University, Python Developer & AI Enthusiast. Building intelligent solutions through code, ML, and real-world projects.">
+  <meta name="keywords" content="Aman Farid, AI Developer, Python, BSAI, Mehran University, Machine Learning, Portfolio">
+  <meta name="author" content="Aman Farid">
+  <meta name="theme-color" content="#0a0f2e">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aman Farid | AI & Python Developer">
+  <meta property="og:description" content="BSAI student building intelligent solutions through Python, AI, and creative code.">
+  <meta property="og:url" content="https://amanfarid.dev">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aman Farid | AI & Python Developer">
+  <meta name="twitter:description" content="BSAI student building intelligent solutions through Python, AI, and creative code.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a href="#hero" class="skip-link">Skip to content</a>
+
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-blob aurora-1"></div>
+    <div class="aurora-blob aurora-2"></div>
+    <div class="aurora-blob aurora-3"></div>
+  </div>
+
+  <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+    <defs>
+      <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#4f8ef7" />
+        <stop offset="100%" stop-color="#00d4ff" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="preloader">
+    <div class="loader-3d">
+      <div class="cube-face cube-front">AF</div>
+      <div class="cube-face cube-back"></div>
+      <div class="cube-face cube-right"></div>
+      <div class="cube-face cube-left"></div>
+      <div class="cube-face cube-top"></div>
+      <div class="cube-face cube-bottom"></div>
+    </div>
+    <div class="loader-bar"><span class="loader-progress"></span></div>
+    <div class="loader-text">Loading Experience</div>
+  </div>
+
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+  <div class="scroll-progress"></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+    <div class="logo">AF</div>
+    <ul class="nav-links">
+      <li><a href="#hero" class="nav-link">Home</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#education" class="nav-link">Education</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#certifications" class="nav-link">Certs</a></li>
+      <li><a href="#beyond" class="nav-link">Beyond</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <div class="hamburger" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </div>
+    </div>
+  </nav>
+
+  <main class="site-main">
+
+  <section id="hero" class="hero section-3d scene-panel">
+    <div id="three-container"></div>
+    <div class="hero-grid-floor" aria-hidden="true"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span> PORTFOLIO 2026</div>
+      <div class="avatar-placeholder avatar-3d">AF</div>
+      <h1 class="glow-text gradient-text hero-title" id="hero-title">Aman Farid</h1>
+      <div class="typewriter-container">
+        <span class="typewriter" id="typewriter"></span><span class="cursor">|</span>
+      </div>
+      <p class="hero-subtitle">BSAI @ Mehran University | Building Intelligent Solutions</p>
+      <div class="hero-cta-row">
+        <a href="#projects" class="cta-button">Explore My Work</a>
+        <a href="#contact" class="cta-button cta-ghost">Get In Touch</a>
+      </div>
+      <div class="hero-social">
+        <a href="https://github.com/amanfarid" target="_blank" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+        <a href="https://www.youtube.com/@CxrseFPS" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+        <a href="https://instagram.com/amanfaridd" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://www.linkedin.com/in/aman-farid-344a4b394/" target="_blank" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      </div>
+    </div>
+    <div class="scroll-indicator"><span></span></div>
+    <div class="floating-shape shape-cube"></div>
+    <div class="floating-shape shape-ring"></div>
+  </section>
+
+  <section id="about" class="about section-3d scene-panel">
+    <div class="section-glow" aria-hidden="true"></div>
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>About <span class="highlight gradient-text">Me</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-content">
+      <div class="about-avatar">AF</div>
+      <div class="about-text">
+        <p>I'm <span class="highlight">Aman Farid</span>, a BSAI student at Mehran University with a deep passion for <span class="highlight">Python</span>, <span class="highlight">Artificial Intelligence</span>, and building real-world solutions through code. From AI-powered expert systems to game development, I love pushing boundaries.</p>
+        <p>Outside coding, I'm a <span class="highlight">competitive gamer</span> and <span class="highlight">chess player</span> — tournament experience that sharpened my strategic thinking and decision-making under pressure. I also edit videos with <span class="highlight">DaVinci Resolve</span>, blending creativity with technical precision.</p>
+        <div class="about-stats">
+          <div class="stat"><span class="stat-number" data-target="10">0</span><span class="stat-label">Projects</span></div>
+          <div class="stat"><span class="stat-number" data-target="2">0</span><span class="stat-label">Certifications</span></div>
+          <div class="stat"><span class="stat-number" data-target="5">0</span><span class="stat-label">Languages</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="floating-shape shape-sphere"></div>
+  </section>
+
+  <section id="skills" class="skills section-3d scene-panel">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>My <span class="highlight gradient-text">Skills</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:90"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div></div><h3>Python</h3></div>
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:85"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div></div><h3>AI / ML</h3></div>
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:75"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></div></div><h3>Java</h3></div>
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:80"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div></div><h3>C++</h3></div>
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:70"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><h3>Game Dev</h3></div>
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:75"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div></div><h3>App Dev</h3></div>
+      <div class="skill-card"><div class="skill-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="50"/><circle class="ring-fill" cx="60" cy="60" r="50" style="--pct:65"/></svg><div class="skill-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div></div><h3>Web Dev</h3></div>
+    </div>
+    <div class="floating-shape shape-donut"></div>
+    <div class="floating-shape shape-pyramid"></div>
+  </section>
+
+  <section id="education" class="education section-3d scene-panel">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>My <span class="highlight gradient-text">Education</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2011 - 2023</div>
+          <h3>Beaconhouse School</h3>
+          <p>Early Education - Sciences & Mathematics</p>
+          <p class="timeline-desc">Completed my foundational education with a strong focus on sciences and mathematics, building the analytical groundwork for my journey into technology and AI.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023 - 2025</div>
+          <h3>APS Hyderabad</h3>
+          <p>Intermediate Education</p>
+          <p class="timeline-desc">Further developed my technical aptitude and discovered my deep passion for programming, problem-solving, and computer science.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025 - 2029</div>
+          <h3>Mehran University of Engineering & Technology</h3>
+          <p>Bachelor's in Artificial Intelligence (BSAI)</p>
+          <p class="timeline-desc">Currently pursuing my degree in AI with focus on Machine Learning, Deep Learning, Data Science, and Intelligent Systems Development.</p>
+        </div>
+      </div>
+    </div>
+    <div class="floating-shape shape-book"></div>
+    <div class="floating-shape shape-ring"></div>
+  </section>
+
+  <section id="projects" class="projects section-3d scene-panel">
+    <div class="section-glow" aria-hidden="true"></div>
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>My <span class="highlight gradient-text">Projects</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card" data-theme="cpp">
+        <div class="project-image"><span class="project-icon" aria-hidden="true">&#127869;</span></div>
+        <div class="project-info">
+          <div class="project-tech"><span>C++</span><span>File I/O</span></div>
+          <h3>Restaurant Management System</h3>
+          <p>A complete C++ console-based system for managing restaurant orders, billing, and inventory — my first major university project in Programming Fundamentals.</p>
+          <a href="https://github.com/amanfarid/Restaurant-Management-System" target="_blank" class="project-link">View on GitHub</a>
+        </div>
+      </div>
+      <div class="project-card" data-theme="ai">
+        <div class="project-image"><span class="project-icon" aria-hidden="true">&#129504;</span></div>
+        <div class="project-info">
+          <div class="project-tech"><span>Python</span><span>AI</span><span>Rules Engine</span></div>
+          <h3>AI Expert System</h3>
+          <p>An intelligent diagnosis expert system built during my Syntecxhub internship. Uses rule-based reasoning to identify medical conditions from symptoms.</p>
+          <a href="https://github.com/amanfarid/Syntecxhub_AI_Week1" target="_blank" class="project-link">View on GitHub</a>
+        </div>
+      </div>
+      <div class="project-card" data-theme="algo">
+        <div class="project-image"><span class="project-icon" aria-hidden="true">&#128506;</span></div>
+        <div class="project-info">
+          <div class="project-tech"><span>Python</span><span>A*</span><span>Algorithms</span></div>
+          <h3>Maze Solver</h3>
+          <p>Implemented the A* pathfinding algorithm to solve complex mazes efficiently. Demonstrates strong algorithmic thinking and advanced Python proficiency.</p>
+          <a href="https://github.com/amanfarid/Syntecxhub_AI_Week1" target="_blank" class="project-link">View on GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="floating-shape shape-cube"></div>
+    <div class="floating-shape shape-pyramid"></div>
+  </section>
+
+  <section id="certifications" class="certifications section-3d scene-panel">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>My <span class="highlight gradient-text">Certifications</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card cert-with-image" tabindex="0" role="button" aria-label="View Google AI Essentials certificate" data-cert="assets/ai-essentials.png">
+        <div class="cert-badge">
+          <img src="assets/ai-essentials.png" alt="Google AI Essentials Certificate" loading="lazy">
+        </div>
+        <h3>Google AI Essentials</h3>
+        <p>Coursera specialization by Google — five courses covering AI tools, prompting, responsible AI use, and productivity workflows.</p>
+        <span class="cert-date">Dec 2025</span>
+        <span class="cert-view-hint">Click to enlarge</span>
+      </div>
+      <div class="cert-card cert-with-image" tabindex="0" role="button" aria-label="View IEEE AI Essentials certificate" data-cert="assets/ieee-cert.png">
+        <div class="cert-badge">
+          <img src="assets/ieee-cert.png" alt="IEEE AI Essentials Certificate of Participation" loading="lazy">
+        </div>
+        <h3>IEEE AI Essentials</h3>
+        <p>Certificate of Participation from IEEE Computer Society MUET — Artificial Intelligence Essentials: From Learning to Earning.</p>
+        <span class="cert-date">2025</span>
+        <span class="cert-view-hint">Click to enlarge</span>
+      </div>
+    </div>
+    <div class="floating-shape shape-sphere"></div>
+  </section>
+
+  <section id="beyond" class="beyond section-3d scene-panel">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Beyond <span class="highlight gradient-text">Code</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="beyond-grid">
+      <div class="beyond-card">
+        <div class="beyond-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <h3 class="beyond-title" data-text="Competitive Gaming">Competitive Gaming</h3>
+        <p>Tournament-level gamer with experience in multiple gaming competitions. Built quick decision-making, teamwork, and strategic thinking under pressure.</p>
+      </div>
+      <div class="beyond-card">
+        <div class="beyond-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <h3 class="beyond-title" data-text="Chess Player">Chess Player</h3>
+        <p>Competitive chess tournament experience that sharpened analytical thinking, pattern recognition, and strategic planning — skills I apply directly to coding.</p>
+      </div>
+      <div class="beyond-card">
+        <div class="beyond-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <h3 class="beyond-title" data-text="Video Editor">Video Editor</h3>
+        <p>1+ year of video editing with DaVinci Resolve. Ran a YouTube channel creating gaming content — blending technical precision with creative storytelling.</p>
+      </div>
+    </div>
+    <div class="floating-shape shape-donut"></div>
+  </section>
+
+  <section id="contact" class="contact section-3d scene-panel">
+    <div class="section-glow" aria-hidden="true"></div>
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Let's <span class="highlight gradient-text">Connect</span></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-container">
+      <form id="contact-form" class="contact-form">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_subject" value="Portfolio Contact Form">
+        <div class="form-group">
+          <input type="text" id="name" name="name" placeholder="Your Name" required>
+          <label for="name">Your Name</label>
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" name="email" placeholder="Your Email" required>
+          <label for="email">Your Email</label>
+        </div>
+        <div class="form-group">
+          <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+          <label for="message">Your Message</label>
+        </div>
+        <button type="submit" class="submit-btn">
+          <span>Send Message</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </form>
+      <div class="contact-info">
+        <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>amanfaridsamoo@gmail.com</span></div>
+        <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Hyderabad, Sindh, Pakistan</span></div>
+        <div class="contact-cta">
+          <p>Have a project idea, internship opportunity, or just want to chat about AI and coding? Let's build something amazing together.</p>
+          <div class="social-links">
+            <a href="https://github.com/amanfarid" class="social-link" title="GitHub" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+            <a href="https://www.youtube.com/@CxrseFPS" class="social-link" title="YouTube" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="mailto:amanfaridsamoo@gmail.com" class="social-link" title="Email" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+            <a href="https://instagram.com/amanfaridd" class="social-link" title="Instagram" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="https://www.linkedin.com/in/aman-farid-344a4b394/" class="social-link" title="LinkedIn" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floating-shape shape-ring"></div>
+  </section>
+
+  </main>
+
+  <nav class="section-indicator" aria-label="Section navigation">
+    <a href="#hero" class="indicator-dot active" data-section="hero" aria-label="Hero"><span class="indicator-label">Home</span></a>
+    <a href="#about" class="indicator-dot" data-section="about" aria-label="About"><span class="indicator-label">About</span></a>
+    <a href="#skills" class="indicator-dot" data-section="skills" aria-label="Skills"><span class="indicator-label">Skills</span></a>
+    <a href="#education" class="indicator-dot" data-section="education" aria-label="Education"><span class="indicator-label">Education</span></a>
+    <a href="#projects" class="indicator-dot" data-section="projects" aria-label="Projects"><span class="indicator-label">Projects</span></a>
+    <a href="#certifications" class="indicator-dot" data-section="certifications" aria-label="Certifications"><span class="indicator-label">Certs</span></a>
+    <a href="#beyond" class="indicator-dot" data-section="beyond" aria-label="Beyond Code"><span class="indicator-label">Beyond</span></a>
+    <a href="#contact" class="indicator-dot" data-section="contact" aria-label="Contact"><span class="indicator-label">Contact</span></a>
+  </nav>
+
+  <footer class="footer">
+    <p>&copy; 2026 Aman Farid. Built with <span class="heart">&hearts;</span> — Open to internships, freelance, and collaborations</p>
+  </footer>
+
+  <button class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <div class="cert-lightbox" id="cert-lightbox" role="dialog" aria-modal="true" aria-label="Certificate preview" hidden>
+    <button class="lightbox-close" aria-label="Close certificate preview">&times;</button>
+    <img src="" alt="Certificate full view" id="lightbox-img">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
