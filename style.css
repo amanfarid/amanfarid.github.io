@@ -411,7 +411,7 @@ body {
 .stat-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; }
 
 /* ===== SKILLS ===== */
-.skills { padding: 6rem 5%; background: #0a0f2e; transform: translateZ(0); }
+.skills { padding: 6rem 5%; background: #0a0f2e; }
 .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
 .skill-card {
   /* rule #8: will-change REMOVED */
@@ -1096,11 +1096,6 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   .about-stats { gap: 1.5rem; }
   .stat-number { font-size: 1.4rem; }
   .projects-grid { grid-template-columns: 1fr; }
-}
-
-/* ===== IOS SKILLS GLITCH FIX ===== */
-@supports (-webkit-overflow-scrolling: touch) {
-  .skills { background-attachment: scroll; }
 }
 
 /* ===== REDUCED MOTION ===== */
