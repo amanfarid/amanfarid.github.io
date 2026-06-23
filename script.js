@@ -205,28 +205,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('section, footer, .about-content, .contact-container, .section-header, .timeline-item').forEach(el => {
+  document.querySelectorAll('section, footer, .about-content, .contact-container, .section-header').forEach(el => {
     el.classList.add('fade-in');
     fadeObs.observe(el);
   });
 
   // ===== TIMELINE — rule #9: unobserve after trigger =====
-  const timelineObs = new IntersectionObserver((entries, obs) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target); // rule #9
-      }
-    });
-  }, { threshold: 0.2 });
-  document.querySelectorAll('.timeline-item').forEach(item => timelineObs.observe(item));
-
   const tlEl = document.querySelector('.timeline');
   if (tlEl) {
     const tlObs = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           e.target.classList.add('visible');
+          e.target.querySelectorAll('.timeline-item').forEach((item, i) => {
+            item.style.transitionDelay = (i * 0.15) + 's';
+            item.classList.add('visible');
+          });
           obs.unobserve(e.target); // rule #9
         }
       });
@@ -364,29 +358,29 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox(); });
   }
 
-  // ===== CTA RIPPLE =====
+  // ===== CTA RIPPLE + PARTICLE BURST =====
   document.querySelectorAll('.cta-button, .submit-btn').forEach(btn => {
     btn.classList.add('ripple-btn');
     btn.addEventListener('click', function (e) {
+      const rect = this.getBoundingClientRect();
       const ripple = document.createElement('span');
       ripple.classList.add('ripple');
-      const rect = this.getBoundingClientRect();
       ripple.style.left = (e.clientX - rect.left) + 'px';
       ripple.style.top = (e.clientY - rect.top) + 'px';
       this.appendChild(ripple);
       setTimeout(() => ripple.remove(), 500);
-    });
-  });
-  document.querySelectorAll('.cta-ghost').forEach(btn => {
-    btn.classList.add('ripple-btn');
-    btn.addEventListener('click', function (e) {
-      const ripple = document.createElement('span');
-      ripple.classList.add('ripple');
-      const rect = this.getBoundingClientRect();
-      ripple.style.left = (e.clientX - rect.left) + 'px';
-      ripple.style.top = (e.clientY - rect.top) + 'px';
-      this.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 500);
+      if (!reducedMotion && window.innerWidth > 768) {
+        const colors = ['#4f8ef7', '#00d4ff', '#7c5cfc', '#fff'];
+        for (let i = 0; i < 6; i++) {
+          const p = document.createElement('span');
+          p.className = 'click-particle';
+          const angle = (Math.PI * 2 / 6) * i + Math.random() * 0.5;
+          const dist = 30 + Math.random() * 25;
+          p.style.cssText = `left:${e.clientX - rect.left}px;top:${e.clientY - rect.top}px;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;background:${colors[i % colors.length]}`;
+          this.appendChild(p);
+          setTimeout(() => p.remove(), 600);
+        }
+      }
     });
   });
 
@@ -426,6 +420,18 @@ document.addEventListener('DOMContentLoaded', () => {
         s.el.style.transform = '';
       }
     });
+  }
+
+  // ===== HERO SPOTLIGHT (rAF-driven) =====
+  const heroSpotlight = document.querySelector('.hero-spotlight');
+  let sTX = 50, sTY = 50, sCX = 50, sCY = 50;
+  const heroEl = document.getElementById('hero');
+  if (heroSpotlight && heroEl && window.innerWidth > 768) {
+    heroEl.addEventListener('mousemove', e => {
+      const rect = heroEl.getBoundingClientRect();
+      sTX = ((e.clientX - rect.left) / rect.width) * 100;
+      sTY = ((e.clientY - rect.top) / rect.height) * 100;
+    }, { passive: true });
   }
 
   // ===== HERO PARALLAX (rAF-driven) =====
@@ -726,8 +732,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // avatar 3D tilt
     animateAvatar();
 
-    // particle canvas (every frame — it's just dots, very cheap)
-    animateParticles();
+      // particle canvas (every frame — it's just dots, very cheap)
+      animateParticles();
+
+      // hero spotlight
+      if (heroSpotlight && window.innerWidth > 768) {
+        sCX += (sTX - sCX) * 0.08;
+        sCY += (sTY - sCY) * 0.08;
+        heroSpotlight.style.setProperty('--sx', sCX + '%');
+        heroSpotlight.style.setProperty('--sy', sCY + '%');
+      }
 
     // shapes every 2nd frame (even cheaper)
     if (rafFrame % 2 === 0) animateShapes();
