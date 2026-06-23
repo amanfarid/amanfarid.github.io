@@ -1072,11 +1072,11 @@ a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   .skills-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
   .skill-ring { width: 80px; height: 80px; }
   .skill-ring-icon { width: 28px; height: 28px; }
-  .ring-fill { stroke: #4f8ef7; }
+  .ring-fill { display: none; }
   .timeline { padding-left: 1.5rem; }
   .certs-grid { grid-template-columns: 1fr; }
   .beyond-grid { grid-template-columns: 1fr; }
-  .section-3d { content-visibility: visible; contain-intrinsic-size: auto; }
+  .section-3d { content-visibility: visible; contain-intrinsic-size: auto; overflow: visible; contain: none; }
   .floating-shape { display: none; }
   .back-to-top { right: 1rem; bottom: 1rem; }
   .nav-inner { padding: 0.5rem 1rem; border-radius: 16px; }
