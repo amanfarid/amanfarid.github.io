@@ -43,13 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ===== VISIBILITY CHANGE — pause everything when tab hidden =====
+  document.addEventListener('visibilitychange', () => {
+    threeRunning = !document.hidden;
+  });
+
   // ===== OPTIMIZED THREE.JS SCENE =====
   let scene, camera, renderer, particles, centralCore, ring, ring2, octahedron;
   let particleGeo, originalPositions;
   let mouse3D = { x: 0, y: 0 };
   let threeRunning = true;
-
   let threeInitialized = false;
+  let threeFrame = 0;
 
   function initThree() {
     if (threeInitialized || typeof THREE === 'undefined') return;
@@ -60,12 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 7;
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    // FIX 2: setPixelRatio(1) instead of 1.5 — saves GPU fill rate
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(1);
     container.appendChild(renderer.domElement);
 
-    const count = 600;
+    // FIX 2: reduced from 600 → 300 particles
+    const count = 300;
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
     originalPositions = new Float32Array(count * 3);
@@ -121,25 +128,29 @@ document.addEventListener('DOMContentLoaded', () => {
   function animateThree() {
     requestAnimationFrame(animateThree);
     if (!threeRunning || !renderer) return;
+    threeFrame++;
 
-    const time = Date.now() * 0.001;
+    // FIX 2: only rotate the whole system instead of per-particle wave math
     if (particles) {
       particles.rotation.y += 0.0006;
-      const posAttr = particleGeo.attributes.position;
-      const arr = posAttr.array;
-      for (let i = 0; i < arr.length; i += 3) {
-        const ox = originalPositions[i];
-        const oy = originalPositions[i + 1];
-        const oz = originalPositions[i + 2];
-        const wave = Math.sin(time * 1.5 + ox * 2 + oy) * 0.03;
+      particles.rotation.x += 0.0002;
+
+      // Only update individual positions every 2nd frame
+      if (threeFrame % 2 === 0) {
+        const time = Date.now() * 0.001;
+        const posAttr = particleGeo.attributes.position;
+        const arr = posAttr.array;
         const mx = mouse3D.x * 0.15;
         const my = mouse3D.y * 0.15;
-        arr[i] = ox + mx + wave;
-        arr[i + 1] = oy + my + Math.cos(time + oz) * 0.02;
-        arr[i + 2] = oz;
+        for (let i = 0; i < arr.length; i += 3) {
+          arr[i] = originalPositions[i] + mx;
+          arr[i + 1] = originalPositions[i + 1] + my;
+          arr[i + 2] = originalPositions[i + 2];
+        }
+        posAttr.needsUpdate = true;
       }
-      posAttr.needsUpdate = true;
     }
+
     if (centralCore) { centralCore.rotation.x += 0.004; centralCore.rotation.y += 0.006; }
     if (octahedron) { octahedron.rotation.x += 0.008; octahedron.rotation.z += 0.005; }
     if (ring) { ring.rotation.z += 0.001; ring.rotation.y += 0.002; }
@@ -185,21 +196,24 @@ document.addEventListener('DOMContentLoaded', () => {
     cursorDot.style.top = cursorY + 'px';
   });
 
+  // FIX 3: cursor ring animation — moved into unified main loop below
   function animateCursor() {
     ringX += (cursorX - ringX) * 0.14;
     ringY += (cursorY - ringY) * 0.14;
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-    requestAnimationFrame(animateCursor);
+    if (cursorRing) {
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top = ringY + 'px';
+    }
   }
-  if (window.innerWidth > 768) animateCursor();
 
   document.querySelectorAll('a, button, .skill-card, .project-card, .cert-card, .beyond-card, .social-link, .hamburger').forEach(el => {
     el.addEventListener('mouseenter', () => {
+      if (!cursorDot || !cursorRing) return;
       cursorDot.style.width = '12px'; cursorDot.style.height = '12px'; cursorDot.style.background = '#00d4ff';
       cursorRing.style.width = '50px'; cursorRing.style.height = '50px'; cursorRing.style.borderColor = 'rgba(0,212,255,0.6)';
     });
     el.addEventListener('mouseleave', () => {
+      if (!cursorDot || !cursorRing) return;
       cursorDot.style.width = '8px'; cursorDot.style.height = '8px'; cursorDot.style.background = '#4f8ef7';
       cursorRing.style.width = '40px'; cursorRing.style.height = '40px'; cursorRing.style.borderColor = 'rgba(79,142,247,0.5)';
     });
@@ -213,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(() => {
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+        if (progressBar) progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
         ticking = false;
       });
       ticking = true;
@@ -226,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const typewriterEl = document.getElementById('typewriter');
 
   function typeWriter() {
+    if (!typewriterEl) return;
     const current = titles[titleIndex];
     if (!isDeleting) {
       charIndex++;
@@ -244,21 +259,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== HAMBURGER =====
   const hamburger = document.querySelector('.hamburger');
   const navLinks = document.querySelector('.nav-links');
-  hamburger.addEventListener('click', () => {
-    const open = hamburger.classList.toggle('active');
-    navLinks.classList.toggle('active');
-    hamburger.setAttribute('aria-expanded', open);
-  });
-  hamburger.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hamburger.click(); }
-  });
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      navLinks.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
+  if (hamburger) {
+    hamburger.addEventListener('click', () => {
+      const open = hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', open);
     });
-  });
+    hamburger.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hamburger.click(); }
+    });
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
 
   // ===== FADE-IN SCROLL (IntersectionObserver) =====
   const fadeEls = document.querySelectorAll('section, footer, .about-content, .contact-container, .section-header, .timeline-item');
@@ -316,21 +333,19 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.innerWidth > 768) {
     initSmoothTilt('.project-card', 32, 6);
     initSmoothTilt('.skill-card, .cert-card, .beyond-card', 36, 4);
-    function animateTilts() {
-      tiltCards.forEach(s => {
-        s.cx += (s.tx - s.cx) * 0.1;
-        s.cy += (s.ty - s.cy) * 0.1;
-        const active = s.hover || Math.abs(s.cx) > 0.02 || Math.abs(s.cy) > 0.02;
-        if (active) {
-          const lift = s.hover ? s.lift : s.lift * (Math.abs(s.cx) + Math.abs(s.cy));
-          s.el.style.transform = `perspective(1200px) rotateX(${s.cy}deg) rotateY(${s.cx}deg) translateY(${-lift}px)`;
-        } else {
-          s.el.style.transform = '';
-        }
-      });
-      requestAnimationFrame(animateTilts);
-    }
-    animateTilts();
+  }
+  function animateTilts() {
+    tiltCards.forEach(s => {
+      s.cx += (s.tx - s.cx) * 0.1;
+      s.cy += (s.ty - s.cy) * 0.1;
+      const active = s.hover || Math.abs(s.cx) > 0.02 || Math.abs(s.cy) > 0.02;
+      if (active) {
+        const lift = s.hover ? s.lift : s.lift * (Math.abs(s.cx) + Math.abs(s.cy));
+        s.el.style.transform = `perspective(1200px) rotateX(${s.cy}deg) rotateY(${s.cx}deg) translateY(${-lift}px)`;
+      } else {
+        s.el.style.transform = '';
+      }
+    });
   }
 
   // ===== SMOOTH SCROLL =====
@@ -346,12 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== NAVBAR SCROLL =====
   const navbar = document.querySelector('.navbar');
-  window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); }, { passive: true });
+  window.addEventListener('scroll', () => { if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50); }, { passive: true });
 
   // ===== BACK TO TOP =====
   const backToTop = document.querySelector('.back-to-top');
-  window.addEventListener('scroll', () => { backToTop.classList.toggle('visible', window.scrollY > 500); }, { passive: true });
-  backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  if (backToTop) {
+    window.addEventListener('scroll', () => { backToTop.classList.toggle('visible', window.scrollY > 500); }, { passive: true });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 
   // ===== SMOOTH HERO PARALLAX =====
   const heroContent = document.querySelector('.hero-content');
@@ -370,75 +387,44 @@ document.addEventListener('DOMContentLoaded', () => {
       heroContent.style.transform = `translateY(${heroTY}px)`;
       heroContent.style.opacity = heroOp;
     }
-    requestAnimationFrame(animateHeroParallax);
   }
-  animateHeroParallax();
 
   // ===== SMOOTH FLOATING SHAPE PARALLAX =====
   const shapeStates = [];
+  const shapeMap = new Map();
   document.querySelectorAll('.section-3d').forEach(section => {
+    const states = [];
     section.querySelectorAll('.floating-shape').forEach(shape => {
-      shapeStates.push({ shape, tx: 0, ty: 0, cx: 0, cy: 0 });
+      const state = { shape, tx: 0, ty: 0, cx: 0, cy: 0 };
+      shapeStates.push(state);
+      states.push(state);
     });
+    shapeMap.set(section, states);
     section.addEventListener('mousemove', e => {
       const rect = section.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      section.querySelectorAll('.floating-shape').forEach((shape, i) => {
-        const idx = shapeStates.findIndex(s => s.shape === shape);
-        if (idx >= 0) {
-          shapeStates[idx].tx = x * -12;
-          shapeStates[idx].ty = y * -12;
-        }
-      });
+      const cached = shapeMap.get(section);
+      if (cached) cached.forEach(state => { state.tx = x * 18; state.ty = y * 18; });
     });
     section.addEventListener('mouseleave', () => {
-      section.querySelectorAll('.floating-shape').forEach(shape => {
-        const idx = shapeStates.findIndex(s => s.shape === shape);
-        if (idx >= 0) { shapeStates[idx].tx = 0; shapeStates[idx].ty = 0; }
-      });
+      const cached = shapeMap.get(section);
+      if (cached) cached.forEach(state => { state.tx = 0; state.ty = 0; });
     });
   });
   function animateShapes() {
     shapeStates.forEach(s => {
-      s.cx += (s.tx - s.cx) * 0.06;
-      s.cy += (s.ty - s.cy) * 0.06;
-      s.shape.style.setProperty('--px', s.cx + 'px');
-      s.shape.style.setProperty('--py', s.cy + 'px');
-    });
-    requestAnimationFrame(animateShapes);
-  }
-  animateShapes();
-
-  // ===== CONTACT FORM (FormSubmit.co AJAX) =====
-  const contactForm = document.getElementById('contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const btn = this.querySelector('.submit-btn');
-      const orig = btn.innerHTML;
-      btn.innerHTML = 'Sending...'; btn.disabled = true;
-      fetch('https://formsubmit.co/ajax/amanfaridsamoo@gmail.com', {
-        method: 'POST',
-        body: new FormData(this)
-      })
-      .then(res => { if (!res.ok) throw new Error('Server error'); return res.json(); })
-      .then(() => {
-        btn.classList.add('success');
-        btn.innerHTML = 'Message Sent!';
-        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; btn.classList.remove('success'); }, 3000);
-        this.reset();
-      })
-      .catch(() => {
-        btn.classList.add('error');
-        btn.innerHTML = 'Failed - Try Again';
-        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; btn.classList.remove('error'); }, 3000);
-      });
+      s.cx += (s.tx - s.cx) * 0.07;
+      s.cy += (s.ty - s.cy) * 0.07;
+      if (Math.abs(s.cx) > 0.05 || Math.abs(s.cy) > 0.05) {
+        s.shape.style.setProperty('--px', s.cx + 'px');
+        s.shape.style.setProperty('--py', s.cy + 'px');
+      }
     });
   }
 
-  // ===== BUTTON RIPPLE =====
-  document.querySelectorAll('.submit-btn, .cta-button:not(.cta-ghost), .back-to-top').forEach(btn => {
+  // ===== CTA RIPPLE =====
+  document.querySelectorAll('.cta-button, .submit-btn').forEach(btn => {
     btn.classList.add('ripple-btn');
     btn.addEventListener('click', function (e) {
       const ripple = document.createElement('span');
@@ -465,18 +451,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     let trailMouseX = 0, trailMouseY = 0;
     document.addEventListener('mousemove', e => { trailMouseX = e.clientX; trailMouseY = e.clientY; });
-    function animateTrails() {
-      let px = trailMouseX, py = trailMouseY;
-      trails.forEach((t, i) => {
-        t.x += (px - t.x) * 0.12;
-        t.y += (py - t.y) * 0.12;
-        t.el.style.left = t.x + 'px';
-        t.el.style.top = t.y + 'px';
-        px = t.x; py = t.y;
-      });
-      requestAnimationFrame(animateTrails);
-    }
-    animateTrails();
+    // FIX 3: trails moved into unified loop
+    window._trails = trails;
+    window._trailMouse = () => ({ x: trailMouseX, y: trailMouseY });
+  }
+
+  function animateTrails() {
+    if (!window._trails) return;
+    const mouse = window._trailMouse();
+    let px = mouse.x, py = mouse.y;
+    window._trails.forEach(t => {
+      t.x += (px - t.x) * 0.12;
+      t.y += (py - t.y) * 0.12;
+      t.el.style.left = t.x + 'px';
+      t.el.style.top = t.y + 'px';
+      px = t.x; py = t.y;
+    });
   }
 
   // ===== STAGGER ENTRANCE FOR GRID ITEMS =====
@@ -490,7 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.15 });
-
   document.querySelectorAll('.skills-grid, .projects-grid, .certs-grid, .beyond-grid').forEach(grid => {
     const items = grid.querySelectorAll(':scope > *');
     items.forEach((item, i) => {
@@ -585,19 +574,17 @@ document.addEventListener('DOMContentLoaded', () => {
       wrap.addEventListener('mouseleave', () => { state.tx = 0; state.ty = 0; });
       magneticWraps.push(state);
     });
-    function animateMagnetic() {
-      magneticWraps.forEach(s => {
-        s.cx += (s.tx - s.cx) * 0.12;
-        s.cy += (s.ty - s.cy) * 0.12;
-        if (Math.abs(s.cx) > 0.1 || Math.abs(s.cy) > 0.1) {
-          s.wrap.style.transform = `translate(${s.cx}px, ${s.cy}px)`;
-        } else {
-          s.wrap.style.transform = '';
-        }
-      });
-      requestAnimationFrame(animateMagnetic);
-    }
-    animateMagnetic();
+  }
+  function animateMagnetic() {
+    magneticWraps.forEach(s => {
+      s.cx += (s.tx - s.cx) * 0.12;
+      s.cy += (s.ty - s.cy) * 0.12;
+      if (Math.abs(s.cx) > 0.1 || Math.abs(s.cy) > 0.1) {
+        s.wrap.style.transform = `translate(${s.cx}px, ${s.cy}px)`;
+      } else {
+        s.wrap.style.transform = '';
+      }
+    });
   }
 
   // ===== SKILL RING ANIMATE ON SCROLL =====
@@ -618,8 +605,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.skill-card').forEach(card => ringObs.observe(card));
 
   // ===== SCROLL-DRIVEN 3D SECTIONS (smooth lerp) =====
+  const panelStates = [];
   if (!reducedMotion && window.innerWidth > 768) {
-    const panelStates = [];
     document.querySelectorAll('.scene-panel:not(#hero)').forEach(panel => {
       panelStates.push({ el: panel, targetR: 0, currentR: 0, targetS: 1, currentS: 1 });
     });
@@ -632,38 +619,35 @@ document.addEventListener('DOMContentLoaded', () => {
         state.targetS = Math.max(0.985, 1 - Math.abs(dist) * 0.015);
       });
     }, { passive: true });
-    function animatePanels() {
-      panelStates.forEach(state => {
-        state.currentR += (state.targetR - state.currentR) * 0.06;
-        state.currentS += (state.targetS - state.currentS) * 0.06;
-        state.el.style.transform = `perspective(1400px) rotateX(${state.currentR}deg) scale(${state.currentS})`;
-      });
-      requestAnimationFrame(animatePanels);
-    }
-    animatePanels();
+  }
+  function animatePanels() {
+    panelStates.forEach(state => {
+      state.currentR += (state.targetR - state.currentR) * 0.06;
+      state.currentS += (state.targetS - state.currentS) * 0.06;
+      state.el.style.transform = `perspective(1400px) rotateX(${state.currentR}deg) scale(${state.currentS})`;
+    });
   }
 
   // ===== AVATAR 3D TILT (smooth) =====
   const avatar = document.querySelector('.avatar-3d');
+  let aTX = 0, aTY = 0, aCX = 0, aCY = 0;
   if (avatar && window.innerWidth > 768 && !reducedMotion) {
-    let aTX = 0, aTY = 0, aCX = 0, aCY = 0;
     document.addEventListener('mousemove', e => {
       const rect = avatar.getBoundingClientRect();
       if (rect.top > window.innerHeight || rect.bottom < 0) { aTX = 0; aTY = 0; return; }
       aTX = ((e.clientX - rect.left - rect.width / 2) / rect.width) * 12;
       aTY = (-(e.clientY - rect.top - rect.height / 2) / rect.height) * 12;
     });
-    function animateAvatar() {
-      aCX += (aTX - aCX) * 0.08;
-      aCY += (aTY - aCY) * 0.08;
-      if (Math.abs(aCX) > 0.05 || Math.abs(aCY) > 0.05) {
-        avatar.style.transform = `perspective(600px) rotateY(${aCX}deg) rotateX(${aCY}deg)`;
-      } else {
-        avatar.style.transform = '';
-      }
-      requestAnimationFrame(animateAvatar);
+  }
+  function animateAvatar() {
+    if (!avatar) return;
+    aCX += (aTX - aCX) * 0.08;
+    aCY += (aTY - aCY) * 0.08;
+    if (Math.abs(aCX) > 0.05 || Math.abs(aCY) > 0.05) {
+      avatar.style.transform = `perspective(600px) rotateY(${aCX}deg) rotateX(${aCY}deg)`;
+    } else {
+      avatar.style.transform = '';
     }
-    animateAvatar();
   }
 
   // ===== GHOST CTA RIPPLE =====
@@ -682,6 +666,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== SECTION-AWARE PARTICLE BACKGROUND =====
   const pCanvas = document.getElementById('bg-canvas');
+  let pFrame = 0;
   if (pCanvas && !reducedMotion) {
     const pCtx = pCanvas.getContext('2d');
     let pW, pH;
@@ -693,18 +678,19 @@ document.addEventListener('DOMContentLoaded', () => {
     resizeP();
     window.addEventListener('resize', resizeP);
 
+    // FIX 1: reduced particle counts from 40-60 → 25-35
     const pThemes = {
-      hero: { colors: ['#4f8ef7', '#00d4ff', '#7c5cfc'], speed: 0.35, size: 2.5, count: 50, connect: true },
-      about: { colors: ['#4f8ef7', '#7c5cfc', '#00d4ff'], speed: 0.2, size: 2, count: 55, connect: true },
-      skills: { colors: ['#00d4ff', '#4f8ef7', '#00ff88'], speed: 0.25, size: 2, count: 60, connect: true },
-      education: { colors: ['#ffd700', '#ffaa00', '#4f8ef7'], speed: 0.15, size: 2.5, count: 45, connect: false },
-      projects: { colors: ['#ff6b6b', '#4f8ef7', '#00d4ff'], speed: 0.22, size: 2, count: 55, connect: true },
-      certifications: { colors: ['#ffd700', '#4f8ef7', '#ffffff'], speed: 0.12, size: 2, count: 40, connect: false },
-      beyond: { colors: ['#ff6b6b', '#00ff88', '#ffd700', '#4f8ef7'], speed: 0.3, size: 2, count: 55, connect: true },
-      contact: { colors: ['#4f8ef7', '#00d4ff', '#ffffff'], speed: 0.15, size: 2, count: 40, connect: false }
+      hero:           { colors: ['#4f8ef7', '#00d4ff', '#7c5cfc'], speed: 0.35, size: 2.5, count: 30, connect: true },
+      about:          { colors: ['#4f8ef7', '#7c5cfc', '#00d4ff'], speed: 0.2,  size: 2,   count: 30, connect: true },
+      skills:         { colors: ['#00d4ff', '#4f8ef7', '#00ff88'], speed: 0.25, size: 2,   count: 35, connect: true },
+      education:      { colors: ['#ffd700', '#ffaa00', '#4f8ef7'], speed: 0.15, size: 2.5, count: 25, connect: false },
+      projects:       { colors: ['#ff6b6b', '#4f8ef7', '#00d4ff'], speed: 0.22, size: 2,   count: 30, connect: true },
+      certifications: { colors: ['#ffd700', '#4f8ef7', '#ffffff'], speed: 0.12, size: 2,   count: 25, connect: false },
+      beyond:         { colors: ['#ff6b6b', '#00ff88', '#ffd700', '#4f8ef7'], speed: 0.3, size: 2, count: 30, connect: true },
+      contact:        { colors: ['#4f8ef7', '#00d4ff', '#ffffff'], speed: 0.15, size: 2,   count: 25, connect: false }
     };
 
-    let particles = [];
+    let pParticles = [];
     let currentTheme = pThemes.hero;
 
     class PParticle {
@@ -728,63 +714,40 @@ document.addEventListener('DOMContentLoaded', () => {
           this.reset(theme);
         }
       }
-      draw(ctx, theme) {
+      draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.globalAlpha = this.alpha;
         ctx.fill();
-        ctx.closePath();
         ctx.globalAlpha = 1;
       }
     }
 
     function initParticles(theme) {
-      particles = [];
+      pParticles = [];
       for (let i = 0; i < theme.count; i++) {
-        particles.push(new PParticle(theme));
+        pParticles.push(new PParticle(theme));
       }
     }
     initParticles(currentTheme);
 
-    function animateParticles() {
-      pCtx.clearRect(0, 0, pW, pH);
-      particles.forEach(p => {
-        p.update(currentTheme);
-        p.draw(pCtx, currentTheme);
-      });
-      if (currentTheme.connect) {
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 80) {
-              pCtx.beginPath();
-              pCtx.moveTo(particles[i].x, particles[i].y);
-              pCtx.lineTo(particles[j].x, particles[j].y);
-              pCtx.strokeStyle = currentTheme.colors[0];
-              pCtx.globalAlpha = 0.04 * (1 - dist / 80);
-              pCtx.lineWidth = 0.5;
-              pCtx.stroke();
-              pCtx.closePath();
-            }
-          }
-        }
-      }
-      pCtx.globalAlpha = 1;
-      requestAnimationFrame(animateParticles);
-    }
+    // FIX 1: connection check moved inside unified loop, runs every 3rd frame
+    window._pCtx = pCtx;
+    window._pParticles = pParticles;
+    window._pGetTheme = () => currentTheme;
+    window._pGetDims = () => ({ pW, pH });
+    window._initParticles = initParticles;
 
     const pSections = [
-      { id: 'hero', el: document.getElementById('hero') },
-      { id: 'about', el: document.getElementById('about') },
-      { id: 'skills', el: document.getElementById('skills') },
-      { id: 'education', el: document.getElementById('education') },
-      { id: 'projects', el: document.getElementById('projects') },
+      { id: 'hero',           el: document.getElementById('hero') },
+      { id: 'about',          el: document.getElementById('about') },
+      { id: 'skills',         el: document.getElementById('skills') },
+      { id: 'education',      el: document.getElementById('education') },
+      { id: 'projects',       el: document.getElementById('projects') },
       { id: 'certifications', el: document.getElementById('certifications') },
-      { id: 'beyond', el: document.getElementById('beyond') },
-      { id: 'contact', el: document.getElementById('contact') }
+      { id: 'beyond',         el: document.getElementById('beyond') },
+      { id: 'contact',        el: document.getElementById('contact') }
     ];
 
     const pObs = new IntersectionObserver((entries) => {
@@ -799,8 +762,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.25 });
 
     pSections.forEach(s => { if (s.el) pObs.observe(s.el); });
+  }
 
-    animateParticles();
+  function animateParticles() {
+    if (!window._pCtx) return;
+    const ctx = window._pCtx;
+    const theme = window._pGetTheme();
+    const { pW, pH } = window._pGetDims();
+    const pts = window._pParticles;
+
+    ctx.clearRect(0, 0, pW, pH);
+    pts.forEach(p => {
+      p.update(theme);
+      p.draw(ctx);
+    });
+
+    // FIX 1: connection lines only every 3rd frame, distance reduced 80→60, skip on mobile
+    if (theme.connect && pFrame % 3 === 0 && window.innerWidth > 768) {
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 60) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = theme.colors[0];
+            ctx.globalAlpha = 0.04 * (1 - dist / 60);
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+    }
   }
 
   // ===== SECTION INDICATOR ACTIVE TRACKING =====
@@ -822,5 +818,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { rootMargin: '-35% 0px -50% 0px', threshold: 0 });
     indicatorSections.forEach(s => { if (s.el) indObs.observe(s.el); });
   }
+
+  // ===== UNIFIED MAIN LOOP — single rAF for everything =====
+  (function _main() {
+    requestAnimationFrame(_main);
+    pFrame++;
+
+    animateTilts();
+    animateHeroParallax();
+    animateMagnetic();
+    animatePanels();
+    animateAvatar();
+    animateParticles();
+    animateTrails();
+
+    // FIX 3: cursor ring now runs in unified loop
+    if (window.innerWidth > 768) animateCursor();
+
+    // shapes run every 2nd frame (cheaper)
+    if (pFrame % 2 === 0) animateShapes();
+  })();
 
 });
